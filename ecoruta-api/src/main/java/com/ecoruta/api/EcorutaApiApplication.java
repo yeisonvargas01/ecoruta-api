@@ -6,8 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class EcorutaApiApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(EcorutaApiApplication.class, args);
-	}
-
+    public static void main(String[] args) {
+        SpringApplication.run(EcorutaApiApplication.class, args);
+    }
 }
