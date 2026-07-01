@@ -1,1 +1,0 @@
-package com.ecoruta.api.negocio.ensamblador;

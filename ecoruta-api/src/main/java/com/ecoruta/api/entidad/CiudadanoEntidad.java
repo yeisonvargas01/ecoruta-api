@@ -1,6 +1,9 @@
 package com.ecoruta.api.entidad;
 
 import java.time.OffsetDateTime;
+import java.util.Locale;
+
+import com.ecoruta.api.utilitario.UtilTexto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,8 +13,23 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "ciudadano", schema = "ecoruta")
+@Table(
+    name = "ciudadano",
+    schema = "ecoruta"
+)
 public class CiudadanoEntidad {
+
+    private static final int LONGITUD_MINIMA_NOMBRE = 3;
+    private static final int LONGITUD_MAXIMA_NOMBRE = 120;
+
+    private static final int LONGITUD_MINIMA_IDENTIFICACION = 5;
+    private static final int LONGITUD_MAXIMA_IDENTIFICACION = 30;
+
+    private static final int LONGITUD_MINIMA_CONTACTO = 7;
+    private static final int LONGITUD_MAXIMA_CONTACTO = 30;
+
+    private static final int LONGITUD_MINIMA_CORREO = 3;
+    private static final int LONGITUD_MAXIMA_CORREO = 120;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,7 +74,7 @@ public class CiudadanoEntidad {
     private OffsetDateTime fechaRegistro;
 
     protected CiudadanoEntidad() {
-        // Constructor requerido por JPA
+        
     }
 
     public CiudadanoEntidad(
@@ -65,50 +83,77 @@ public class CiudadanoEntidad {
             String contacto,
             String correoElectronico) {
 
-        this.nombreCompleto = nombreCompleto;
-        this.identificacion = identificacion;
-        this.contacto = contacto;
-        this.correoElectronico = correoElectronico;
+        this.identificacion =
+                validarIdentificacion(
+                        identificacion
+                );
+
+        actualizarDatosPersonales(
+                nombreCompleto,
+                contacto,
+                correoElectronico
+        );
+    }
+
+    public void actualizarDatosPersonales(
+            String nombreCompleto,
+            String contacto,
+            String correoElectronico) {
+
+        this.nombreCompleto =
+                UtilTexto.obtenerValorObligatorioConLongitud(
+                        nombreCompleto,
+                        "El nombre completo",
+                        LONGITUD_MINIMA_NOMBRE,
+                        LONGITUD_MAXIMA_NOMBRE
+                );
+
+        this.contacto =
+                UtilTexto.obtenerValorObligatorioConLongitud(
+                        contacto,
+                        "El número de contacto",
+                        LONGITUD_MINIMA_CONTACTO,
+                        LONGITUD_MAXIMA_CONTACTO
+                );
+
+        this.correoElectronico =
+                UtilTexto.obtenerValorObligatorioConLongitud(
+                        correoElectronico,
+                        "El correo electrónico",
+                        LONGITUD_MINIMA_CORREO,
+                        LONGITUD_MAXIMA_CORREO
+                ).toLowerCase(Locale.ROOT);
+    }
+
+    private String validarIdentificacion(
+            String identificacion) {
+
+        return UtilTexto.obtenerValorObligatorioConLongitud(
+                identificacion,
+                "La identificación",
+                LONGITUD_MINIMA_IDENTIFICACION,
+                LONGITUD_MAXIMA_IDENTIFICACION
+        );
     }
 
     public Long getIdCiudadano() {
         return idCiudadano;
     }
 
-    public void setIdCiudadano(Long idCiudadano) {
-        this.idCiudadano = idCiudadano;
-    }
-
     public String getNombreCompleto() {
         return nombreCompleto;
-    }
-
-    public void setNombreCompleto(String nombreCompleto) {
-        this.nombreCompleto = nombreCompleto;
     }
 
     public String getIdentificacion() {
         return identificacion;
     }
 
-    public void setIdentificacion(String identificacion) {
-        this.identificacion = identificacion;
-    }
-
     public String getContacto() {
         return contacto;
     }
 
-    public void setContacto(String contacto) {
-        this.contacto = contacto;
-    }
-
     public String getCorreoElectronico() {
         return correoElectronico;
-    }
-
-    public void setCorreoElectronico(String correoElectronico) {
-        this.correoElectronico = correoElectronico;
     }
 
     public OffsetDateTime getFechaRegistro() {
